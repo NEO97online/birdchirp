@@ -1,0 +1,24 @@
+{
+  "name": "birdchirp",
+  "version": "0.0.1",
+  "description": "a service that generates static files from data in a database",
+  "main": "index.js",
+  "scripts": {
+    "start": "index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hermbit/birdchirp.git"
+  },
+  "author": "Michael Auderer",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hermbit/birdchirp/issues"
+  },
+  "homepage": "https://github.com/hermbit/birdchirp#readme",
+  "dependencies": {
+    "@google-cloud/firestore": "^0.10.0",
+    "fs-extra": "^5.0.0",
+    "request": "^2.83.0"
+  }
+}

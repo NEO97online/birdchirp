@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "birdchirp-testing",
+  "private_key_id": "439c67a2e6b3817e9799e7120abd88412356fe5a",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDEODJM5Gc1TdMU\n8h8TdY85s3brdDj7AdXXwI0PoNCp3op/dDj1YxjejDXQYPdHRjYS+yUMIbeRIFIb\nyIKslMKvqM8gKDQ/IrEtARSFKBUxoXrlnmESZBo63qXiHmbmD+X1xwwCinDoyx40\nSNzBq8+MfQb92xQz2ls3imJV3c7N6xzA8sPH0J9vxEi/D6xUhcQ98BJRxAP7LhQJ\nVAH9ZwyT1P/lE6vn7S0ElIPuTVKsxSRi8jJ1bxA6fq0/FnZrJzOob/JsfQciPPoL\noUdkCnIdl1batK5TUx+RCDnfkJ4RBH9XY5ftxIMsbPoq+iyLqdXODL7o/XxoNgnC\nApnmvsu3AgMBAAECggEADq8n8IItSRtsXwZplfK3x7kq/p7hfsNZ5f4GcHN3+iZp\n1fT0KEUEwO7cPh5rkv1poY0C7j/9tVImYubkBJdTZILtETqBAnKNsNECYJ6py1+K\ny3FJUW+FWP99iYj96VyqOHTvbKdAoONGfOIxBxtc+mYG5muFPQYrymHETym8xsMe\nhPAI3IoO0q2z1LED/rgo9qYtyNqMXFrWRQnA4J+UObgZKxJjucISsppfrEsZUXCV\n9PU2P4ztmVqoRukdeZOsccY8KWpAbMLgRBxN36HuYsHvYtYOmBXQVXd50VdOsTH0\ng9i12c3coY5PLJCFmmG4i67Q1YPmnugOVxwhlUGqwQKBgQDi3K3Rs6BY2MyxvaC7\n0qSptDe1wg9Veu6//g3jVM9hjBQFkkQhTwfZfZ1ONKcPMKrrTqRkPNTYoPbs+SF5\ng3adC28Q3f+q5opI2H5J8buNaqONZRFPg8zri/sXEd5fQ+z8x7F0v79t7w0SUzza\n4sVvb+XLKmtZhcUx99cntjM99wKBgQDda/qF8vF9b7a1Y8fLiiT57MGn9UowSzR2\n/xWvdZkp4SMj3QZ2km8TjPbvOXczxX8SqPpo/1v26bev5+4GjSwp3ReJs4cn06dd\nMH8/vW4HI6D4DqgSXFs/0+RG6EIL1KcXxtSGYRwNkjKjjLI359MnDtHsIepePhbl\nCgIR5GBwQQKBgQChpGuVR0+w/oia/GpSabw5ztcDAsq6NWV4FyT+HafF8XEypw00\nToNhTEeROaLvB9ZA4z/uzAk8cTR/lONtGWaib0sr0YIh2zIcxWT2eu8PzDPMw36a\nEWcpTgwSXAD+EAAD/KVMcnOLeRDvRa/OplXXGPu6zva+Sro+6EC9Yu0P8QKBgGb0\nk0t/WEx0CmezWq5IsMLJFI7NXk6wWVfPajzomGxBs/40ApJVqnJTxGodtVCMT3bU\nvYLe4dsgd3nChQnk0JkypYQwxvJ81sBdEX4IzcViCrHs1rea3A8ErotN6Y/otD05\nBY7qTon85bDodeHK2IK7wF5ksr5ZbnnXOnkpULJBAoGBALFQ3aUPzHT08kJaWiE2\n6KteKL2y9yJNu2XZKP2z7+AGEZmsrQ/PorkfDrD409MvtOcI7PVN+xYUl2Q8bPoy\nA5u/wO4jmBRCJsQu1tQQ/s0i4hIuDWxQNt0/YV8Zt6yyXMZY4miC0fvgij4YJbMS\n7QM5/sr9dEOTzfH11N3K91L7\n-----END PRIVATE KEY-----\n",
+  "client_email": "testing@birdchirp-testing.iam.gserviceaccount.com",
+  "client_id": "117599929823484190810",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://accounts.google.com/o/oauth2/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/testing%40birdchirp-testing.iam.gserviceaccount.com"
+}

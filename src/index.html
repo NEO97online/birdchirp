@@ -1,0 +1,20 @@
+<html>
+  <head>
+    <title>Birdchirp Prototype</title>
+  </head>
+  <body>
+    
+    <: doc /products/shoe :>
+      <h1><: .name :></h1>
+      <h3>$<: .price :></h3>
+    </:>
+
+    <: col /products :>
+      <div style="display: inline-block; margin: 16px; padding: 16px;border: 1px solid #000;">
+        <h1><: .name :></h1>
+        <h3>$<: .price :></h3>
+      </div>
+    </:>
+
+  </body>
+</html>
