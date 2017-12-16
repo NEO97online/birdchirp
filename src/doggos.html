@@ -1,0 +1,22 @@
+<: home = /pages/home :>
+<: dogs = /dogs :>
+<head>
+  <title>Alyssa's Doggos :)</title>
+  <link rel="stylesheet" href="./styles.css">
+  <link href="https://fonts.googleapis.com/css?family=Pacifico" rel="stylesheet">
+</head>
+
+
+  <body>
+
+    <h1><:home.title:></h1>
+    <h2><:home.phonenumber:></h2>
+
+    <: for dog of dogs :>
+      <img src="<:dog.image:>">
+    </:>
+
+
+  </body>
+</:>
+

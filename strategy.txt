@@ -1,0 +1,10 @@
+1. identify references by searching for <:___ = ___:>
+2. make a batch firestore request to load each reference
+3. begin chirp loop:
+  1. find next bird <: :>
+  2. if it starts with *, this is a special bird
+    - *for
+    - *if
+    - *else
+  3. if not, this is a variable
+    - split the path by dots and insert the variable
