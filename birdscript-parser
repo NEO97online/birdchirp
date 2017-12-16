@@ -1,0 +1,106 @@
+class BirdParser {
+
+  charArray;
+  dataTree;
+
+  parse(string, dataTree, debug) {
+    this.dataTree = dataTree;
+    // first, remove all refs, they should already be in the dataTree
+    this.charArray = string.replace(/<: *(\S*) *={1} *(\S*) *:>/g, '').split('');
+    // then, parse the data
+    
+  }
+}
+
+/**
+ * Finds all <: birds :> in a string, and replaces them with data from the given object.
+ */
+function parseBirds(string, dataTree, debug) {
+  // first, remove all refs, they should already be in the dataTree
+  this.charArray = string.replace(/<: *(\S*) *={1} *(\S*) *:>/g, '').split('');
+  // then, parse the file data
+  const tree = {};
+  const buffer = [];
+  let lastChar = '';
+  let state = 'out'; // out, def, 
+  let type = null;
+  let currRef = null;
+  const varPath = [];
+  let start = -1;
+  let end = -1;
+  let line = 0;
+  let column = 0;
+  for (let i = 0; i < charArray.length; i++) {
+    const char = result[i];
+    if (debug) console.log('read: ' + char);
+    column++;
+    // newline
+    if (char === '\n') {
+      line++;
+      column = 0;
+      continue;
+    }
+    // <:
+    else if (lastChar === '<' && char === ':') {
+      if (state != 'def') {
+        if (debug) console.log('new bird');
+        state = 'def'; // open new bird
+        start = i;
+        type = null;
+      } else {
+        console.error(`[ERROR] Found an extra <: at line ${line} column ${column}`);
+        continue;
+      }
+    }
+    // var.path
+    else if (state === 'def' && type === null && char !== ' ') {
+      state = 'deftype';
+      buffer.length = 0;
+    }
+    // end of var name
+    else if (state === 'deftype' && type === null && char === '.') {
+      type = 'var';
+      currRef = buffer.join('');
+      buffer.length = 0; // clear the buffer
+      state = 'varchild';
+    }
+    // end of variable node
+    else if (state === 'varchild' && char === '.') {
+      const node = buffer.join('');
+      varPath.push(node); // push this node into the path stack
+      buffer.length = 0; // clear the buffer
+    }
+    // end of variable path
+    else if (state === 'varchild' && char === ':') {
+      const node = buffer.join('');
+      varPath.push(node);
+      buffer.length = 0;
+      state = 'end';
+    }
+    // end of bird
+    else if (state === 'end' && char === '>') {
+      end = i;
+      console.log(currRef, varPath);
+      const data = chirpData[currRef][varPath[0]];
+      cleanupCount = end - start;
+      result.splice(start-1, cleanupCount+2, data);
+      i = start + data.length;
+      console.log(i);
+      state = 'out';
+      buffer.length = 0;
+      currRef = null;
+      varPath.length = 0;
+    }
+
+    
+    if (char !== ' ') { // ignore whitespace
+      lastChar = char;
+      if (char !== '.') {
+        buffer.push(char);
+      }
+    }
+
+  }
+  // resolve with the resulting parsed data
+  resolve(result.join(''));
+}
