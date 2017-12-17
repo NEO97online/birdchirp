@@ -21,6 +21,9 @@ const firestore = new Firestore({
   keyFilename: './birdchirp-testing-439c67a2e6b3.json'
 });
 
+const BirdParser = require('./birdscript-parser');
+const parser = new BirdParser();
+
 /**
  * Runs a function for each match of the regex found in the given string.
  * @param {*string} string The string to run the regex on.
@@ -71,94 +74,7 @@ function createForLoopRegex() {
 function parseBirds(fileString, chirpData) {
   spinner.start('Parsing file with retrieved birds...');
   return new Promise((resolve, reject) => {
-    // first, remove all firestore refs, they should already be in chirpData
-    let result = fileString.replace(createRefRegex(), '').split('');
-    // then, parse the file data
-    const tree = {};
-    const buffer = [];
-    let lastChar = '';
-    let state = 'out'; // out, def, 
-    let type = null;
-    let currRef = null;
-    const varPath = [];
-    let start = -1;
-    let end = -1;
-    let line = 0;
-    let column = 0;
-    console.log(result.length);
-    for (let i = 0; i < result.length; i++) {
-      const char = result[i];
-      console.log('read: ' + char);
-      column++;
-      // newline
-      if (char === '\n') {
-        line++;
-        column = 0;
-        continue;
-      }
-      // <:
-      else if (lastChar === '<' && char === ':') {
-        if (state != 'def') {
-          console.log('new bird');
-          state = 'def'; // open new bird
-          start = i;
-          type = null;
-        } else {
-          console.error(`[ERROR] Found an extra <: at line ${line} column ${column}`);
-          continue;
-        }
-      }
-      // var.path
-      else if (state === 'def' && type === null && char !== ' ') {
-        state = 'deftype';
-        buffer.length = 0;
-      }
-      // end of var name
-      else if (state === 'deftype' && type === null && char === '.') {
-        type = 'var';
-        currRef = buffer.join('');
-        buffer.length = 0; // clear the buffer
-        state = 'varchild';
-      }
-      // end of variable node
-      else if (state === 'varchild' && char === '.') {
-        const node = buffer.join('');
-        varPath.push(node); // push this node into the path stack
-        buffer.length = 0; // clear the buffer
-      }
-      // end of variable path
-      else if (state === 'varchild' && char === ':') {
-        const node = buffer.join('');
-        varPath.push(node);
-        buffer.length = 0;
-        state = 'end';
-      }
-      // end of bird
-      else if (state === 'end' && char === '>') {
-        end = i;
-        console.log(currRef, varPath);
-        const data = chirpData[currRef][varPath[0]];
-        cleanupCount = end - start;
-        result.splice(start-1, cleanupCount+2, data);
-        i = start + data.length;
-        console.log(i);
-        state = 'out';
-        buffer.length = 0;
-        currRef = null;
-        varPath.length = 0;
-      }
-
-      
-      if (char !== ' ') { // ignore whitespace
-        lastChar = char;
-        if (char !== '.') {
-          buffer.push(char);
-        }
-      }
-
-    }
-    // resolve with the resulting parsed data
-    resolve(result.join(''));
+    resolve(parser.parse(fileString, chirpData, true));
   }).catch(reason => spinner.fail(reason));
 }
 
@@ -166,7 +82,7 @@ function parseBirds(fileString, chirpData) {
  * Returns a bird ref object from a given regex match.
  * @param {*RegExpExecArray} regexMatch The result of calling .exec on the regex
  */
-function getChirpRef(regexMatch) {
+function getBirdRef(regexMatch) {
   const chirpRef = {
     raw:  regexMatch[0],
     name: regexMatch[1],
@@ -176,32 +92,64 @@ function getChirpRef(regexMatch) {
   return chirpRef;
 }
 
-function loadRefs(fileData) {
+/**
+ * Loads all bird references from a string, returning a promise that
+ * resolves to the data received by Firestore.
+ * @param string the string to load bird references from
+ */
+function loadRefs(string) {
   return new Promise((resolve, reject) => {
     // Find all Firestore references
-    const chirpResults = {};
+    const dataTree = {};
     let remaining = 0;
     const regex = createRefRegex();
-    regex.forEach(fileData, match => {
-      const chirpRef = getChirpRef(match);
+    regex.forEach(string, match => {
+      const birdRef = getBirdRef(match);
       remaining++;
-      spinner.start(`Loading chirp '${chirpRef.name}' from '${chirpRef.path}`);
-      // Request the chirp's data from Firestore
-      firestore.doc(chirpRef.path).get()
-        .then(docSnapshot => {
-          const data = docSnapshot.data();
-          chirpResults[chirpRef.name] = data;
-          remaining--;
-          spinner.info(`Retrieved chirp: ${JSON.stringify(data)}`);
-          if (remaining === 0) {
-            spinner.succeed('Successfully retrieved all chirps!');
-            resolve(chirpResults);
-          }
-        });
+      // check if this is a doc or collection
+      pathLength = birdRef.path.split('/').filter(c => c.length != 0).length;
+      if (pathLength % 2 == 0) {
+        // Document Ref
+        spinner.start(`Loading bird ref '${birdRef.name}' from document '${birdRef.path}`);
+        firestore.doc(birdRef.path).get()
+          .then(docSnapshot => {
+            const data = docSnapshot.data();
+            dataTree[birdRef.name] = data;
+            remaining--;
+            spinner.info(`Retrieved chirp: ${JSON.stringify(data)}`);
+            if (remaining === 0) {
+              spinner.succeed('Successfully retrieved all chirps!');
+              resolve(dataTree);
+            }
+          });
+      } else {
+        // Collection Ref
+        spinner.start(`Loading bird ref '${birdRef.name}' from collection '${birdRef.path}`);
+        firestore.collection(birdRef.path).get()
+          .then(colSnapshot => {
+            const docs = [];
+            colSnapshot.docs.forEach(doc => {
+              const data = doc.data();
+              docs.push(data);
+              spinner.info(`Retrieved doc: ${JSON.stringify(data)}`);
+            });
+            dataTree[birdRef.name] = docs;
+            remaining--;
+            if (remaining === 0) {
+              spinner.succeed('Successfully retrieved all chirps!');
+              //console.log(JSON.stringify(dataTree, null, 2));
+              resolve(dataTree);
+            }
+          })
+      }
     });
   });
 }
 
+/**
+ * Reads a file and returns the contents as a string.
+ * @param sourceFile The file to read
+ */
 function readFile(sourceFile) {
   return new Promise((resolve, reject) => {
     spinner.start(`Reading file ${sourceFile}...`);
